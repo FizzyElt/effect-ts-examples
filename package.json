@@ -1,0 +1,22 @@
+{
+  "name": "effect-examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@effect/platform": "^0.55.1",
+    "@effect/schema": "^0.67.14",
+    "effect": "^3.2.5"
+  }
+}
