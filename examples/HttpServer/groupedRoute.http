@@ -1,0 +1,14 @@
+### user
+GET http://localhost:3000/user
+
+### user/hello
+GET http://localhost:3000/user/hello
+
+### product
+GET http://localhost:3000/product
+
+### product/hello
+GET http://localhost:3000/product/hello
+
+### root
+GET http://localhost:3000

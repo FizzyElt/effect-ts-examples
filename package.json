@@ -10,12 +10,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@biomejs/biome": "^1.7.3",
     "@types/node": "^20.12.12",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
     "@effect/platform": "^0.55.1",
+    "@effect/platform-node": "^0.51.1",
     "@effect/schema": "^0.67.14",
     "effect": "^3.2.5"
   }
