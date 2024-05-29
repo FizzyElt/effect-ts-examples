@@ -1,7 +1,8 @@
 import { Effect, Layer, pipe } from "effect";
-import { HttpServer } from "@effect/platform";
+import { HttpServer, FileSystem, Path } from "@effect/platform";
 import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
 import { createServer } from "node:http";
+import { Schema } from "@effect/schema";
 
 // 直接讀取 request 內容
 const readRequest = pipe(
@@ -19,11 +20,18 @@ const readBodyRequest = pipe(
   Effect.flatMap((body) => HttpServer.response.json(body)),
 );
 
+// 讀取 body json 內容
+const readFormRequest = pipe(
+  HttpServer.request.schemaBodyForm(Schema.Struct({})),
+  Effect.flatMap((body) => HttpServer.response.json(body)),
+);
+
 // 建立 router
 const router = pipe(
   HttpServer.router.empty,
   HttpServer.router.get("/", readRequest),
   HttpServer.router.get("/readBody", readBodyRequest),
+  HttpServer.router.post("/readForm", readFormRequest),
 );
 
 // 建立 app
@@ -38,4 +46,5 @@ const ServerLive = NodeHttpServer.server.layerServer(() => createServer(), {
 });
 
 // 執行 server
+// @ts-ignore
 NodeRuntime.runMain(Layer.launch(Layer.provide(app, ServerLive)));

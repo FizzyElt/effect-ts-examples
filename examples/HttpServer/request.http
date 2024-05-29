@@ -1,0 +1,13 @@
+### root
+GET http://localhost:3000
+
+### read json body
+GET http://localhost:3000/readBody
+
+{"name":"john","age":18}
+
+
+### read form data
+POST http://localhost:3000/readForm
+
+name=john&age=18
