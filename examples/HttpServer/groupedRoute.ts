@@ -1,4 +1,4 @@
-import { Layer, pipe } from "effect";
+import { Effect, Layer, pipe } from "effect";
 import { HttpServer } from "@effect/platform";
 import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
 import { createServer } from "node:http";
@@ -21,11 +21,45 @@ const productRouters = HttpServer.router.prefixAll(
   "/product",
 );
 
+const pageRouters = pipe(
+  HttpServer.router.empty,
+  HttpServer.router.get(
+    "/:pageNum",
+    HttpServer.router.params.pipe(
+      Effect.flatMap(({ pageNum }) =>
+        HttpServer.response.text(`page ${pageNum}`),
+      ),
+    ),
+  ),
+);
+
+const categoryRouters = pipe(
+  HttpServer.router.empty,
+  HttpServer.router.get(
+    "/:categoryId",
+    HttpServer.router.params.pipe(
+      Effect.flatMap(({ categoryId }) =>
+        HttpServer.response.text(`category ${categoryId}`),
+      ),
+    ),
+  ),
+);
+
+// 利用 mount 將目標 router group 起來
+const categoryPageRouters = pipe(
+  HttpServer.router.empty,
+  // categoryRouters 底下的路由都會被加上 category
+  HttpServer.router.mount("/category", categoryRouters),
+  // pageRouters 底下的路由都會被加上 page
+  HttpServer.router.mount("/page", pageRouters),
+);
+
 // 合併所有 group
 const router = pipe(
   HttpServer.router.empty,
   HttpServer.router.concat(userRouters),
   HttpServer.router.concat(productRouters),
+  HttpServer.router.concat(categoryPageRouters),
 );
 
 // 建立 app
