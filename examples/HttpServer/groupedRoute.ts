@@ -4,28 +4,27 @@ import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
 import { createServer } from "node:http";
 
 // user router group
-const userRouters = HttpServer.router.prefixAll(
-  HttpServer.router.empty.pipe(
-    HttpServer.router.get("/", HttpServer.response.text("user")),
-    HttpServer.router.get("/hello", HttpServer.response.text("user hello")),
-  ),
-  "/user",
+const userRouters = pipe(
+  HttpServer.router.empty,
+  HttpServer.router.get("/", HttpServer.response.text("user")),
+  HttpServer.router.get("/hello", HttpServer.response.text("user hello")),
+  HttpServer.router.prefixAll("/user"),
 );
 
 // product router group
-const productRouters = HttpServer.router.prefixAll(
-  HttpServer.router.empty.pipe(
-    HttpServer.router.get("/", HttpServer.response.text("product")),
-    HttpServer.router.get("/hello", HttpServer.response.text("product hello")),
-  ),
-  "/product",
+const productRouters = pipe(
+  HttpServer.router.empty,
+  HttpServer.router.get("/", HttpServer.response.text("product")),
+  HttpServer.router.get("/hello", HttpServer.response.text("product hello")),
+  HttpServer.router.prefixAll("/product"),
 );
 
 const pageRouters = pipe(
   HttpServer.router.empty,
   HttpServer.router.get(
     "/:pageNum",
-    HttpServer.router.params.pipe(
+    pipe(
+      HttpServer.router.params,
       Effect.flatMap(({ pageNum }) =>
         HttpServer.response.text(`page ${pageNum}`),
       ),
@@ -37,7 +36,8 @@ const categoryRouters = pipe(
   HttpServer.router.empty,
   HttpServer.router.get(
     "/:categoryId",
-    HttpServer.router.params.pipe(
+    pipe(
+      HttpServer.router.params,
       Effect.flatMap(({ categoryId }) =>
         HttpServer.response.text(`category ${categoryId}`),
       ),
@@ -63,7 +63,8 @@ const router = pipe(
 );
 
 // 建立 app
-const app = router.pipe(
+const app = pipe(
+  router,
   HttpServer.server.serve(),
   HttpServer.server.withLogAddress,
 );
