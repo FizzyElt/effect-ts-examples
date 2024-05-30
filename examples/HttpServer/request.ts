@@ -1,6 +1,11 @@
 import { Effect, Layer, pipe } from "effect";
-import { HttpServer, FileSystem, Path } from "@effect/platform";
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { HttpServer } from "@effect/platform";
+import {
+  NodeHttpServer,
+  NodeRuntime,
+  NodeFileSystem,
+  NodePath,
+} from "@effect/platform-node";
 import { createServer } from "node:http";
 import { Schema } from "@effect/schema";
 
@@ -45,6 +50,11 @@ const ServerLive = NodeHttpServer.server.layerServer(() => createServer(), {
   port: 3000,
 });
 
+const program = app.pipe(
+  Layer.provide(ServerLive),
+  Layer.provide(NodeFileSystem.layer),
+  Layer.provide(NodePath.layer),
+);
+
 // 執行 server
-// @ts-ignore
-NodeRuntime.runMain(Layer.launch(Layer.provide(app, ServerLive)));
+NodeRuntime.runMain(Layer.launch(program));
