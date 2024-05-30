@@ -25,7 +25,7 @@ const readBodyRequest = pipe(
   Effect.flatMap((body) => HttpServer.response.json(body)),
 );
 
-// 讀取 body json 內容
+// 讀取 form 的內容
 const readFormRequest = pipe(
   HttpServer.request.schemaBodyForm(Schema.Struct({})),
   Effect.flatMap((body) => HttpServer.response.json(body)),
@@ -50,11 +50,11 @@ const ServerLive = NodeHttpServer.server.layerServer(() => createServer(), {
   port: 3000,
 });
 
-const program = app.pipe(
-  Layer.provide(ServerLive),
-  Layer.provide(NodeFileSystem.layer),
-  Layer.provide(NodePath.layer),
+const MainLive = pipe(
+  ServerLive,
+  Layer.merge(NodeFileSystem.layer),
+  Layer.merge(NodePath.layer),
 );
 
 // 執行 server
-NodeRuntime.runMain(Layer.launch(program));
+pipe(app, Layer.provide(MainLive), Layer.launch, NodeRuntime.runMain);
