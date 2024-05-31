@@ -27,8 +27,11 @@ const readBodyRequest = pipe(
 
 // 讀取 form 的內容
 const readFormRequest = pipe(
-  HttpServer.request.schemaBodyForm(Schema.Struct({})),
-  Effect.flatMap((body) => HttpServer.response.json(body)),
+  HttpServer.request.ServerRequest,
+  Effect.flatMap((req) => req.urlParamsBody),
+  Effect.flatMap((paramsBody) =>
+    HttpServer.response.json(Object.fromEntries(paramsBody)),
+  ),
 );
 
 // 建立 router
