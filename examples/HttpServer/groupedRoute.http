@@ -13,8 +13,8 @@ GET http://localhost:3000/product
 ### product/hello
 GET http://localhost:3000/product/hello
 
-### category with page
+### category
 GET http://localhost:3000/category/123
 
-### category with page
+### page
 GET http://localhost:3000/page/321
