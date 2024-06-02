@@ -1,5 +1,10 @@
 # Effect-TS ecosystem examples
 
-- HttpServer
-  - router
-  - request
+- effect
+  - Context
+    - Service
+    - Layer
+- @effect/platform
+  - HttpServer
+    - router
+    - request
