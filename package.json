@@ -10,15 +10,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
-    "@types/node": "^20.12.12",
+    "@biomejs/biome": "^1.8.2",
+    "@types/node": "^20.14.8",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "dependencies": {
-    "@effect/platform": "^0.55.1",
-    "@effect/platform-node": "^0.51.1",
-    "@effect/schema": "^0.67.14",
-    "effect": "^3.2.5"
+    "@effect/platform": "^0.58.2",
+    "@effect/platform-node": "^0.53.1",
+    "@effect/schema": "^0.68.5",
+    "effect": "^3.4.0"
   }
 }
