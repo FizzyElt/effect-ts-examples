@@ -1,5 +1,10 @@
 import { Effect, Layer, pipe } from "effect";
-import { HttpServer } from "@effect/platform";
+import {
+  HttpServer,
+  HttpRouter,
+  HttpServerRequest,
+  HttpServerResponse,
+} from "@effect/platform";
 import {
   NodeHttpServer,
   NodeRuntime,
@@ -7,49 +12,45 @@ import {
   NodePath,
 } from "@effect/platform-node";
 import { createServer } from "node:http";
-import { Schema } from "@effect/schema";
 
 // 直接讀取 request 內容
 const readRequest = pipe(
-  HttpServer.request.ServerRequest,
+  HttpServerRequest.HttpServerRequest,
   Effect.flatMap((req) => {
     console.log(req);
-    return HttpServer.response.text("Hello World");
+    return HttpServerResponse.text("Hello World");
   }),
 );
 
 // 讀取 body json 內容
 const readBodyRequest = pipe(
-  HttpServer.request.ServerRequest,
+  HttpServerRequest.HttpServerRequest,
   Effect.flatMap((req) => req.json),
-  Effect.flatMap((body) => HttpServer.response.json(body)),
+  Effect.flatMap((body) => HttpServerResponse.json(body)),
 );
 
 // 讀取 form 的內容
 const readFormRequest = pipe(
-  HttpServer.request.ServerRequest,
+  HttpServerRequest.HttpServerRequest,
   Effect.flatMap((req) => req.urlParamsBody),
   Effect.flatMap((paramsBody) =>
-    HttpServer.response.json(Object.fromEntries(paramsBody)),
+    HttpServerResponse.json(Object.fromEntries(paramsBody)),
   ),
 );
 
 // 建立 router
 const router = pipe(
-  HttpServer.router.empty,
-  HttpServer.router.get("/", readRequest),
-  HttpServer.router.get("/readBody", readBodyRequest),
-  HttpServer.router.post("/readForm", readFormRequest),
+  HttpRouter.empty,
+  HttpRouter.get("/", readRequest),
+  HttpRouter.get("/readBody", readBodyRequest),
+  HttpRouter.post("/readForm", readFormRequest),
 );
 
 // 建立 app
-const app = router.pipe(
-  HttpServer.server.serve(),
-  HttpServer.server.withLogAddress,
-);
+const app = router.pipe(HttpServer.serve(), HttpServer.withLogAddress);
 
 // 建立一個 Node Http Server Layer
-const ServerLive = NodeHttpServer.server.layerServer(() => createServer(), {
+const ServerLive = NodeHttpServer.layerServer(() => createServer(), {
   port: 3000,
 });
 
