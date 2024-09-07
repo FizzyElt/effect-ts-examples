@@ -1,4 +1,5 @@
 import { pipe, Effect, flow } from "effect";
+import { TaggedError } from "effect/Data";
 import { Schema } from "@effect/schema";
 import {
   HttpRouter,
@@ -10,9 +11,7 @@ import { sign, verify } from "jsonwebtoken";
 
 const JWT_SECRET = "secret";
 
-class JwtError {
-  readonly _tag = "JwtError";
-}
+class JwtError extends TaggedError("JwtError") {}
 
 const userSchema = Schema.Struct({
   name: Schema.String,
@@ -46,12 +45,21 @@ export const jwtValidator = HttpMiddleware.make((app) =>
       ),
     ),
   ).pipe(
-    Effect.catchTag("JwtError", () => {
-      return HttpServerResponse.text("Jwt validate error").pipe(
+    Effect.catchTag("JwtError", () =>
+      HttpServerResponse.text("Jwt validate error").pipe(
         HttpServerResponse.setStatus(401),
-      );
-    }),
-    Effect.catchTag("ParseError", () => HttpServerResponse.text("parse error")),
+      ),
+    ),
+    Effect.catchTag("ParseError", () =>
+      HttpServerResponse.text("parse error").pipe(
+        HttpServerResponse.setStatus(400),
+      ),
+    ),
+    Effect.catchAll(() =>
+      HttpServerResponse.text("unknown error").pipe(
+        HttpServerResponse.setStatus(500),
+      ),
+    ),
   ),
 );
 
