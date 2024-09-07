@@ -1,0 +1,7 @@
+POST http://localhost:3000/login
+
+{"name":"john","password":"asd"}
+
+### user
+GET http://localhost:3000/user
+Authorization: eJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiam9obiIsInBhc3N3b3JkIjoiYXNkIiwiaWF0IjoxNzI1NzI1NDY0LCJleHAiOjE3MjU3MjkwNjR9.jbw-rdAr_kovmztsf7Uzb0qsPz_MgIWUpfINHXWPbPk
