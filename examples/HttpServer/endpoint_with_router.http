@@ -1,0 +1,5 @@
+### endpoint
+GET http://localhost:3000/root
+
+### router
+GET http://localhost:3000/route
